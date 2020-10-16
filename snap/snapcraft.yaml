@@ -1,0 +1,37 @@
+name: ag
+summary: The Silver Searcher
+description: |
+  The Silver Searcher
+
+  A code searching tool similar to `ack`, with a focus on speed.
+license: Apache-2.0
+confinement: classic
+grade: stable
+base: core20
+adopt-info: ag
+
+apps:
+  ag:
+    command: ag
+    completer: bash_completion.sh
+
+parts:
+  ag:
+    plugin: autotools
+    source: .
+    source-type: git
+    build-packages:
+      - libpcre3-dev
+      - liblzma-dev
+      - pkg-config
+      - zlib1g-dev
+    override-build: |
+      set -e
+      snapcraftctl build
+      snapcraftctl set-version $(git describe --tags --always)
+    organize:
+      usr/local/bin/ag: ag
+      usr/local/share/the_silver_searcher/completions/ag.bashcomp.sh: bash_completion.sh
+    prime:
+      - ag
+      - bash_completion.sh
